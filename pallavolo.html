@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulazione Fantacalcio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #00796b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Simulazione Partita Fantacalcio</h1>
+    
+    <!-- Checkbox per attivare o disattivare la penalità -->
+    <label>
+        <input type="checkbox" id="applicaPenalita">
+        Applica penalità per giocatori mancanti
+    </label>
+    <br><br>
+    
+    <button onclick="simulaPartita()">Simula Partita</button>
+
+    <!-- Tabella per visualizzare i risultati -->
+    <table id="tabellaRisultati">
+        <thead>
+            <tr>
+                <th>Squadra</th>
+                <th>Punti Partita</th>
+                <th>Punti Totali</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Squadra A</td>
+                <td id="puntiPartitaA">0</td>
+                <td id="puntiTotaliA">0</td>
+            </tr>
+            <tr>
+                <td>Squadra B</td>
+                <td id="puntiPartitaB">0</td>
+                <td id="puntiTotaliB">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Div per mostrare il vincitore della partita -->
+    <div id="risultato" class="result"></div>
+</div>
+
+<script>
+    // Definizione delle squadre con punteggio totale iniziale
+    const squadraA = {
+        nome: "Squadra A",
+        puntiTotali: 0,
+        giocatoriDisponibili: 11 // Numero iniziale di giocatori disponibili
+    };
+
+    const squadraB = {
+        nome: "Squadra B",
+        puntiTotali: 0,
+        giocatoriDisponibili: 11 // Numero iniziale di giocatori disponibili
+    };
+
+    const giocatoriMinimi = 11; // Numero minimo di giocatori per evitare penalità
+
+    // Funzione per simulare i punteggi (somma casuale tra 18 e 30)
+    function generaPunteggioPartita() {
+        return Math.floor(Math.random() * 13) + 18; // Genera un punteggio tra 18 e 30
+    }
+
+    // Funzione per simulare una riduzione di giocatori (simula infortuni o assenze)
+    function riduciGiocatori(squadra) {
+        const giocatoriAssenti = Math.floor(Math.random() * 3); // Simula fino a 2 giocatori assenti
+        squadra.giocatoriDisponibili -= giocatoriAssenti;
+    }
+
+    // Funzione per simulare la partita e aggiornare la tabella
+    function simulaPartita() {
+        // Simula riduzione dei giocatori disponibili per entrambe le squadre
+        riduciGiocatori(squadraA);
+        riduciGiocatori(squadraB);
+
+        let punteggioPartitaA = generaPunteggioPartita();
+        let punteggioPartitaB = generaPunteggioPartita();
+
+        // Controlla se la checkbox per applicare la penalità è selezionata
+        const applicaPenalita = document.getElementById("applicaPenalita").checked;
+
+        // Applica la penalità solo se la checkbox è selezionata
+        if (applicaPenalita) {
+            if (squadraA.giocatoriDisponibili < giocatoriMinimi) {
+                punteggioPartitaA -= 7; // Penalità di 7 punti
+            }
+            if (squadraB.giocatoriDisponibili < giocatoriMinimi) {
+                punteggioPartitaB -= 7; // Penalità di 7 punti
+            }
+        }
+
+        // Evita punteggi negativi dopo la penalità
+        if (punteggioPartitaA < 0) punteggioPartitaA = 0;
+        if (punteggioPartitaB < 0) punteggioPartitaB = 0;
+
+        // Aggiorna i punti totali delle squadre
+        squadraA.puntiTotali += punteggioPartitaA;
+        squadraB.puntiTotali += punteggioPartitaB;
+
+        // Aggiorna la tabella con i dati della partita
+        document.getElementById("puntiPartitaA").textContent = punteggioPartitaA;
+        document.getElementById("puntiTotaliA").textContent = squadraA.puntiTotali;
+        document.getElementById("puntiPartitaB").textContent = punteggioPartitaB;
+        document.getElementById("puntiTotaliB").textContent = squadraB.puntiTotali;
+
+        // Mostra il vincitore della partita
+        let risultato = "";
+        if (punteggioPartitaA > punteggioPartitaB) {
+            risultato = `<h2>${squadraA.nome} vince questa partita!</h2>`;
+        } else if (punteggioPartitaA < punteggioPartitaB) {
+            risultato = `<h2>${squadraB.nome} vince questa partita!</h2>`;
+        } else {
+            risultato = `<h2>Pareggio!</h2>`;
+        }
+
+        // Inserisci il risultato della partita nell'elemento HTML
+        document.getElementById("risultato").innerHTML = risultato;
+    }
+</script>
+</body>
+</html>

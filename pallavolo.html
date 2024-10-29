@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulazione Fantacalcio</title>
+    <title>Simulazione Partita di Pallavolo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #e3f2fd;
             margin: 0;
             padding: 20px;
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: white;
+            background-color: #ffffff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
+            color: #0d47a1;
         }
         .result {
             margin-top: 20px;
@@ -27,13 +29,14 @@
         }
         button {
             padding: 10px 20px;
-            background-color: #00796b;
+            background-color: #0d47a1;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
         }
         button:hover {
-            background-color: #004d40;
+            background-color: #1565c0;
         }
         table {
             width: 100%;
@@ -46,7 +49,7 @@
             text-align: center;
         }
         th {
-            background-color: #00796b;
+            background-color: #0d47a1;
             color: white;
         }
     </style>
@@ -54,9 +57,8 @@
 <body>
 
 <div class="container">
-    <h1>Simulazione Partita Fantacalcio</h1>
+    <h1>Simulazione Partita di Pallavolo</h1>
     
-    <!-- Checkbox per attivare o disattivare la penalità -->
     <label>
         <input type="checkbox" id="applicaPenalita">
         Applica penalità per giocatori mancanti
@@ -65,7 +67,6 @@
     
     <button onclick="simulaPartita()">Simula Partita</button>
 
-    <!-- Tabella per visualizzare i risultati -->
     <table id="tabellaRisultati">
         <thead>
             <tr>
@@ -88,50 +89,128 @@
         </tbody>
     </table>
 
-    <!-- Div per mostrare il vincitore della partita -->
     <div id="risultato" class="result"></div>
+
+    <h2>Statistiche Giocatori</h2>
+    <table id="tabellaGiocatori">
+        <thead>
+            <tr>
+                <th>Giocatore</th>
+                <th>Squadra</th>
+                <th>Attacchi</th>
+                <th>Voto</th>
+                <th>Assenze</th>
+            </tr>
+        </thead>
+        <tbody id="dettagliGiocatori">
+            <!-- Le statistiche dei giocatori saranno inserite qui -->
+        </tbody>
+    </table>
 </div>
 
 <script>
-    // Definizione delle squadre con punteggio totale iniziale
     const squadraA = {
         nome: "Squadra A",
         puntiTotali: 0,
-        giocatoriDisponibili: 11 // Numero iniziale di giocatori disponibili
+        giocatoriDisponibili: 17,
+        giocatori: [
+            { nome: "Giocatore 1", assenze: 0 },
+            { nome: "Giocatore 2", assenze: 0 },
+            { nome: "Giocatore 3", assenze: 0 },
+            { nome: "Giocatore 4", assenze: 0 },
+            { nome: "Giocatore 5", assenze: 0 },
+            { nome: "Giocatore 6", assenze: 0 },
+            { nome: "Giocatore 7", assenze: 0 },
+            { nome: "Giocatore 8", assenze: 0 },
+            { nome: "Giocatore 9", assenze: 0 },
+            { nome: "Giocatore 10", assenze: 0 },
+            { nome: "Giocatore 11", assenze: 0 },
+            { nome: "Giocatore 12", assenze: 0 },
+            { nome: "Giocatore 13", assenze: 0 },
+            { nome: "Giocatore 14", assenze: 0 },
+            { nome: "Giocatore 15", assenze: 0 },
+            { nome: "Giocatore 16", assenze: 0 },
+            { nome: "Giocatore 17", assenze: 0 }
+        ]
     };
 
     const squadraB = {
         nome: "Squadra B",
         puntiTotali: 0,
-        giocatoriDisponibili: 11 // Numero iniziale di giocatori disponibili
+        giocatoriDisponibili: 17,
+        giocatori: [
+            { nome: "Giocatore A", assenze: 0 },
+            { nome: "Giocatore B", assenze: 0 },
+            { nome: "Giocatore C", assenze: 0 },
+            { nome: "Giocatore D", assenze: 0 },
+            { nome: "Giocatore E", assenze: 0 },
+            { nome: "Giocatore F", assenze: 0 },
+            { nome: "Giocatore G", assenze: 0 },
+            { nome: "Giocatore H", assenze: 0 },
+            { nome: "Giocatore I", assenze: 0 },
+            { nome: "Giocatore J", assenze: 0 },
+            { nome: "Giocatore K", assenze: 0 },
+            { nome: "Giocatore L", assenze: 0 },
+            { nome: "Giocatore M", assenze: 0 },
+            { nome: "Giocatore N", assenze: 0 },
+            { nome: "Giocatore O", assenze: 0 },
+            { nome: "Giocatore P", assenze: 0 },
+            { nome: "Giocatore Q", assenze: 0 }
+        ]
     };
 
-    const giocatoriMinimi = 11; // Numero minimo di giocatori per evitare penalità
+    const giocatoriMinimi = 6; // Numero minimo di giocatori per squadra per non subire penalità
 
-    // Funzione per simulare i punteggi (somma casuale tra 18 e 30)
     function generaPunteggioPartita() {
-        return Math.floor(Math.random() * 13) + 18; // Genera un punteggio tra 18 e 30
+        return Math.floor(Math.random() * 21) + 25; // Punteggio tra 25 e 45
     }
 
-    // Funzione per simulare una riduzione di giocatori (simula infortuni o assenze)
     function riduciGiocatori(squadra) {
-        const giocatoriAssenti = Math.floor(Math.random() * 3); // Simula fino a 2 giocatori assenti
+        const giocatoriAssenti = Math.floor(Math.random() * 3); // Massimo 2 giocatori assenti
         squadra.giocatoriDisponibili -= giocatoriAssenti;
+        for (let i = 0; i < giocatoriAssenti; i++) {
+            const indiceGiocatore = Math.floor(Math.random() * squadra.giocatori.length);
+            squadra.giocatori[indiceGiocatore].assenze += 1; // Incrementa il conteggio delle assenze
+        }
     }
 
-    // Funzione per simulare la partita e aggiornare la tabella
+    function simulaStatisticheGiocatori(squadra) {
+        return squadra.giocatori.map(giocatore => ({
+            nome: giocatore.nome,
+            squadra: squadra.nome,
+            attacchi: Math.floor(Math.random() * 21), // Numero casuale di attacchi tra 0 e 20
+            voto: (Math.random() * 4 + 6).toFixed(1), // Voto tra 6 e 10
+            assenze: giocatore.assenze // Aggiungi il numero di assenze
+        }));
+    }
+
+    function mostraStatisticheGiocatori(statistiche) {
+        const dettagliGiocatori = document.getElementById("dettagliGiocatori");
+        dettagliGiocatori.innerHTML = "";
+        
+        statistiche.forEach(giocatore => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${giocatore.nome}</td>
+                <td>${giocatore.squadra}</td>
+                <td>${giocatore.attacchi}</td>
+                <td>${giocatore.voto}</td>
+                <td>${giocatore.assenze}</td>
+            `;
+            dettagliGiocatori.appendChild(row);
+        });
+    }
+
     function simulaPartita() {
-        // Simula riduzione dei giocatori disponibili per entrambe le squadre
         riduciGiocatori(squadraA);
         riduciGiocatori(squadraB);
 
+        // Genera punteggio delle due squadre
         let punteggioPartitaA = generaPunteggioPartita();
         let punteggioPartitaB = generaPunteggioPartita();
 
-        // Controlla se la checkbox per applicare la penalità è selezionata
+        // Applica penalità se ci sono giocatori assenti
         const applicaPenalita = document.getElementById("applicaPenalita").checked;
-
-        // Applica la penalità solo se la checkbox è selezionata
         if (applicaPenalita) {
             if (squadraA.giocatoriDisponibili < giocatoriMinimi) {
                 punteggioPartitaA -= 7; // Penalità di 7 punti
@@ -141,19 +220,20 @@
             }
         }
 
-        // Evita punteggi negativi dopo la penalità
-        if (punteggioPartitaA < 0) punteggioPartitaA = 0;
-        if (punteggioPartitaB < 0) punteggioPartitaB = 0;
-
-        // Aggiorna i punti totali delle squadre
+        // Aggiorna i punteggi totali
         squadraA.puntiTotali += punteggioPartitaA;
         squadraB.puntiTotali += punteggioPartitaB;
 
-        // Aggiorna la tabella con i dati della partita
-        document.getElementById("puntiPartitaA").textContent = punteggioPartitaA;
-        document.getElementById("puntiTotaliA").textContent = squadraA.puntiTotali;
-        document.getElementById("puntiPartitaB").textContent = punteggioPartitaB;
-        document.getElementById("puntiTotaliB").textContent = squadraB.puntiTotali;
+        // Mostra i risultati nella tabella
+        document.getElementById("puntiPartitaA").innerText = punteggioPartitaA;
+        document.getElementById("puntiPartitaB").innerText = punteggioPartitaB;
+        document.getElementById("puntiTotaliA").innerText = squadraA.puntiTotali;
+        document.getElementById("puntiTotaliB").innerText = squadraB.puntiTotali;
+
+        // Mostra le statistiche dei giocatori
+        const statisticheGiocatoriA = simulaStatisticheGiocatori(squadraA);
+        const statisticheGiocatoriB = simulaStatisticheGiocatori(squadraB);
+        mostraStatisticheGiocatori([...statisticheGiocatoriA, ...statisticheGiocatoriB]);
 
         // Mostra il vincitore della partita
         let risultato = "";
@@ -165,7 +245,6 @@
             risultato = `<h2>Pareggio!</h2>`;
         }
 
-        // Inserisci il risultato della partita nell'elemento HTML
         document.getElementById("risultato").innerHTML = risultato;
     }
 </script>

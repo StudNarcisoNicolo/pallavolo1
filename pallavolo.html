@@ -77,12 +77,12 @@
         </thead>
         <tbody>
             <tr>
-                <td>Squadra A</td>
+                <td>Gumiero</td>
                 <td id="puntiPartitaA">0</td>
                 <td id="puntiTotaliA">0</td>
             </tr>
             <tr>
-                <td>Squadra B</td>
+                <td>Salvo</td>
                 <td id="puntiPartitaB">0</td>
                 <td id="puntiTotaliB">0</td>
             </tr>
@@ -91,71 +91,68 @@
 
     <div id="risultato" class="result"></div>
 
-    <h2>Statistiche Giocatori</h2>
-    <table id="tabellaGiocatori">
+    <h2>Statistiche Giocatori - Gumiero</h2>
+    <table id="tabellaGiocatoriA">
         <thead>
             <tr>
                 <th>Giocatore</th>
-                <th>Squadra</th>
                 <th>Attacchi</th>
                 <th>Voto</th>
                 <th>Assenze</th>
             </tr>
         </thead>
-        <tbody id="dettagliGiocatori">
-            <!-- Le statistiche dei giocatori saranno inserite qui -->
+        <tbody id="dettagliGiocatoriA">
+            <!-- Le statistiche dei giocatori di Gumiero saranno inserite qui -->
+        </tbody>
+    </table>
+
+    <h2>Statistiche Giocatori - Salvo</h2>
+    <table id="tabellaGiocatoriB">
+        <thead>
+            <tr>
+                <th>Giocatore</th>
+                <th>Attacchi</th>
+                <th>Voto</th>
+                <th>Assenze</th>
+            </tr>
+        </thead>
+        <tbody id="dettagliGiocatoriB">
+            <!-- Le statistiche dei giocatori di Salvo saranno inserite qui -->
         </tbody>
     </table>
 </div>
 
 <script>
     const squadraA = {
-        nome: "Squadra A",
+        nome: "Gumiero",
         puntiTotali: 0,
-        giocatoriDisponibili: 17,
+        giocatoriDisponibili: 9,
         giocatori: [
-            { nome: "Giocatore 1", assenze: 0 },
-            { nome: "Giocatore 2", assenze: 0 },
-            { nome: "Giocatore 3", assenze: 0 },
-            { nome: "Giocatore 4", assenze: 0 },
-            { nome: "Giocatore 5", assenze: 0 },
-            { nome: "Giocatore 6", assenze: 0 },
-            { nome: "Giocatore 7", assenze: 0 },
-            { nome: "Giocatore 8", assenze: 0 },
-            { nome: "Giocatore 9", assenze: 0 },
-            { nome: "Giocatore 10", assenze: 0 },
-            { nome: "Giocatore 11", assenze: 0 },
-            { nome: "Giocatore 12", assenze: 0 },
-            { nome: "Giocatore 13", assenze: 0 },
-            { nome: "Giocatore 14", assenze: 0 },
-            { nome: "Giocatore 15", assenze: 0 },
-            { nome: "Giocatore 16", assenze: 0 },
-            { nome: "Giocatore 17", assenze: 0 }
+            { nome: "Gumiero", assenze: 0 },
+            { nome: "Bodlli", assenze: 0 },
+            { nome: "Rigamonti", assenze: 0 },
+            { nome: "Mascheroni", assenze: 0 },
+            { nome: "Bramani", assenze: 0 },
+            { nome: "Locatelli", assenze: 0 },
+            { nome: "Ricali", assenze: 0 },
+            { nome: "Jabir", assenze: 0 },
+            { nome: "Fontana", assenze: 0 }
         ]
     };
 
     const squadraB = {
-        nome: "Squadra B",
+        nome: "Salvo",
         puntiTotali: 0,
-        giocatoriDisponibili: 17,
+        giocatoriDisponibili: 8,
         giocatori: [
-            { nome: "Giocatore A", assenze: 0 },
-            { nome: "Giocatore B", assenze: 0 },
-            { nome: "Giocatore C", assenze: 0 },
-            { nome: "Giocatore D", assenze: 0 },
-            { nome: "Giocatore E", assenze: 0 },
-            { nome: "Giocatore F", assenze: 0 },
-            { nome: "Giocatore G", assenze: 0 },
-            { nome: "Giocatore H", assenze: 0 },
-            { nome: "Giocatore I", assenze: 0 },
-            { nome: "Giocatore J", assenze: 0 },
-            { nome: "Giocatore K", assenze: 0 },
-            { nome: "Giocatore L", assenze: 0 },
-            { nome: "Giocatore M", assenze: 0 },
-            { nome: "Giocatore N", assenze: 0 },
-            { nome: "Giocatore O", assenze: 0 },
-            { nome: "Giocatore P", assenze: 0 },
-            { nome: "Giocatore Q", assenze: 0 }
+            { nome: "Salvo", assenze: 0 },
+            { nome: "Zorzan", assenze: 0 },
+            { nome: "Narciso", assenze: 0 },
+            { nome: "Palazzo", assenze: 0 },
+            { nome: "Barindelli", assenze: 0 },
+            { nome: "Ghisolfi", assenze: 0 },
+            { nome: "Tonet", assenze: 0 },
+            { nome: "Yachou", assenze: 0 }
         ]
     };
 
@@ -177,27 +174,39 @@
     function simulaStatisticheGiocatori(squadra) {
         return squadra.giocatori.map(giocatore => ({
             nome: giocatore.nome,
-            squadra: squadra.nome,
             attacchi: Math.floor(Math.random() * 21), // Numero casuale di attacchi tra 0 e 20
             voto: (Math.random() * 4 + 6).toFixed(1), // Voto tra 6 e 10
             assenze: giocatore.assenze // Aggiungi il numero di assenze
         }));
     }
 
-    function mostraStatisticheGiocatori(statistiche) {
-        const dettagliGiocatori = document.getElementById("dettagliGiocatori");
-        dettagliGiocatori.innerHTML = "";
+    function mostraStatisticheGiocatori(statisticheA, statisticheB) {
+        const dettagliGiocatoriA = document.getElementById("dettagliGiocatoriA");
+        const dettagliGiocatoriB = document.getElementById("dettagliGiocatoriB");
         
-        statistiche.forEach(giocatore => {
+        dettagliGiocatoriA.innerHTML = "";
+        dettagliGiocatoriB.innerHTML = "";
+        
+        statisticheA.forEach(giocatore => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${giocatore.nome}</td>
-                <td>${giocatore.squadra}</td>
                 <td>${giocatore.attacchi}</td>
                 <td>${giocatore.voto}</td>
                 <td>${giocatore.assenze}</td>
             `;
-            dettagliGiocatori.appendChild(row);
+            dettagliGiocatoriA.appendChild(row);
+        });
+
+        statisticheB.forEach(giocatore => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${giocatore.nome}</td>
+                <td>${giocatore.attacchi}</td>
+                <td>${giocatore.voto}</td>
+                <td>${giocatore.assenze}</td>
+            `;
+            dettagliGiocatoriB.appendChild(row);
         });
     }
 
@@ -224,28 +233,27 @@
         squadraA.puntiTotali += punteggioPartitaA;
         squadraB.puntiTotali += punteggioPartitaB;
 
-        // Mostra i risultati nella tabella
-        document.getElementById("puntiPartitaA").innerText = punteggioPartitaA;
-        document.getElementById("puntiPartitaB").innerText = punteggioPartitaB;
-        document.getElementById("puntiTotaliA").innerText = squadraA.puntiTotali;
-        document.getElementById("puntiTotaliB").innerText = squadraB.puntiTotali;
+        // Aggiorna la tabella dei risultati
+        document.getElementById("puntiPartitaA").textContent = punteggioPartitaA;
+        document.getElementById("puntiTotaliA").textContent = squadraA.puntiTotali;
+        document.getElementById("puntiPartitaB").textContent = punteggioPartitaB;
+        document.getElementById("puntiTotaliB").textContent = squadraB.puntiTotali;
 
-        // Mostra le statistiche dei giocatori
-        const statisticheGiocatoriA = simulaStatisticheGiocatori(squadraA);
-        const statisticheGiocatoriB = simulaStatisticheGiocatori(squadraB);
-        mostraStatisticheGiocatori([...statisticheGiocatoriA, ...statisticheGiocatoriB]);
-
-        // Mostra il vincitore della partita
-        let risultato = "";
+        // Determina il risultato della partita
+        let risultato;
         if (punteggioPartitaA > punteggioPartitaB) {
             risultato = `<h2>${squadraA.nome} vince questa partita!</h2>`;
-        } else if (punteggioPartitaA < punteggioPartitaB) {
+        } else if (punteggioPartitaB > punteggioPartitaA) {
             risultato = `<h2>${squadraB.nome} vince questa partita!</h2>`;
         } else {
             risultato = `<h2>Pareggio!</h2>`;
         }
-
         document.getElementById("risultato").innerHTML = risultato;
+
+        // Simula e mostra le statistiche dei giocatori
+        const statisticheGiocatoriA = simulaStatisticheGiocatori(squadraA);
+        const statisticheGiocatoriB = simulaStatisticheGiocatori(squadraB);
+        mostraStatisticheGiocatori(statisticheGiocatoriA, statisticheGiocatoriB);
     }
 </script>
 </body>

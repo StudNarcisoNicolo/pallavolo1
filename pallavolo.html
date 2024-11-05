@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -66,6 +66,8 @@
     <br><br>
     
     <button onclick="simulaPartita()">Simula Partita</button>
+
+    <div id="dataPartita" class="result"></div> <!-- Elemento per mostrare la data della partita -->
 
     <table id="tabellaRisultati">
         <thead>
@@ -214,6 +216,17 @@
         riduciGiocatori(squadraA);
         riduciGiocatori(squadraB);
 
+        // Genera la data della partita
+        const dataPartita = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+        const dataFormattata = dataPartita.toLocaleDateString('it-IT', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+
+        // Visualizza la data della partita
+        document.getElementById("dataPartita").textContent = `Data della partita: ${dataFormattata}`;
+
         // Genera punteggio delle due squadre
         let punteggioPartitaA = generaPunteggioPartita();
         let punteggioPartitaB = generaPunteggioPartita();
@@ -256,5 +269,6 @@
         mostraStatisticheGiocatori(statisticheGiocatoriA, statisticheGiocatoriB);
     }
 </script>
+
 </body>
 </html>

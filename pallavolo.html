@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -66,8 +66,6 @@
     <br><br>
     
     <button onclick="simulaPartita()">Simula Partita</button>
-
-    <div id="dataPartita" class="result"></div> <!-- Elemento per mostrare la data della partita -->
 
     <table id="tabellaRisultati">
         <thead>
@@ -191,23 +189,23 @@
         
         statisticheA.forEach(giocatore => {
             const row = document.createElement("tr");
-            row.innerHTML = `
+            row.innerHTML = 
                 <td>${giocatore.nome}</td>
                 <td>${giocatore.attacchi}</td>
                 <td>${giocatore.voto}</td>
                 <td>${giocatore.assenze}</td>
-            `;
+            ;
             dettagliGiocatoriA.appendChild(row);
         });
 
         statisticheB.forEach(giocatore => {
             const row = document.createElement("tr");
-            row.innerHTML = `
+            row.innerHTML = 
                 <td>${giocatore.nome}</td>
                 <td>${giocatore.attacchi}</td>
                 <td>${giocatore.voto}</td>
                 <td>${giocatore.assenze}</td>
-            `;
+            ;
             dettagliGiocatoriB.appendChild(row);
         });
     }
@@ -215,17 +213,6 @@
     function simulaPartita() {
         riduciGiocatori(squadraA);
         riduciGiocatori(squadraB);
-
-        // Genera la data della partita
-        const dataPartita = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
-        const dataFormattata = dataPartita.toLocaleDateString('it-IT', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-
-        // Visualizza la data della partita
-        document.getElementById("dataPartita").textContent = `Data della partita: ${dataFormattata}`;
 
         // Genera punteggio delle due squadre
         let punteggioPartitaA = generaPunteggioPartita();
@@ -255,11 +242,11 @@
         // Determina il risultato della partita
         let risultato;
         if (punteggioPartitaA > punteggioPartitaB) {
-            risultato = `<h2>${squadraA.nome} vince questa partita!</h2>`;
+            risultato = <h2>${squadraA.nome} vince questa partita!</h2>;
         } else if (punteggioPartitaB > punteggioPartitaA) {
-            risultato = `<h2>${squadraB.nome} vince questa partita!</h2>`;
+            risultato = <h2>${squadraB.nome} vince questa partita!</h2>;
         } else {
-            risultato = `<h2>Pareggio!</h2>`;
+            risultato = <h2>Pareggio!</h2>;
         }
         document.getElementById("risultato").innerHTML = risultato;
 
@@ -269,6 +256,5 @@
         mostraStatisticheGiocatori(statisticheGiocatoriA, statisticheGiocatoriB);
     }
 </script>
-
 </body>
 </html>

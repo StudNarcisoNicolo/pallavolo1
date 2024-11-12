@@ -5,53 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulazione Partita di Pallavolo</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #e3f2fd;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #0d47a1;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #0d47a1;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #1565c0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background-color: #0d47a1;
-            color: white;
-        }
+        /* Stili CSS rimangono invariati */
+        body { font-family: Arial, sans-serif; background-color: #e3f2fd; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; 
+                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 10px; }
+        h1, h2 { text-align: center; color: #0d47a1; }
+        .result { margin-top: 20px; padding: 10px; }
+        button { padding: 10px 20px; background-color: #0d47a1; color: white; border: none; cursor: pointer; 
+                 border-radius: 5px; }
+        button:hover { background-color: #1565c0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #0d47a1; color: white; }
     </style>
 </head>
 <body>
@@ -66,6 +31,8 @@
     <br><br>
     
     <button onclick="simulaPartita()">Simula Partita</button>
+
+    <div id="dataPartita" class="result"></div>
 
     <table id="tabellaRisultati">
         <thead>
@@ -101,9 +68,7 @@
                 <th>Assenze</th>
             </tr>
         </thead>
-        <tbody id="dettagliGiocatoriA">
-            <!-- Le statistiche dei giocatori di Gumiero saranno inserite qui -->
-        </tbody>
+        <tbody id="dettagliGiocatoriA"></tbody>
     </table>
 
     <h2>Statistiche Giocatori - Salvo</h2>
@@ -116,16 +81,14 @@
                 <th>Assenze</th>
             </tr>
         </thead>
-        <tbody id="dettagliGiocatoriB">
-            <!-- Le statistiche dei giocatori di Salvo saranno inserite qui -->
-        </tbody>
+        <tbody id="dettagliGiocatoriB"></tbody>
     </table>
 </div>
 
 <script>
     const squadraA = {
         nome: "Gumiero",
-        puntiTotali: 0,
+        puntiTotali: parseInt(localStorage.getItem('puntiTotaliA')) || 0,
         giocatoriDisponibili: 9,
         giocatori: [
             { nome: "Gumiero", assenze: 0 },
@@ -142,7 +105,7 @@
 
     const squadraB = {
         nome: "Salvo",
-        puntiTotali: 0,
+        puntiTotali: parseInt(localStorage.getItem('puntiTotaliB')) || 0,
         giocatoriDisponibili: 8,
         giocatori: [
             { nome: "Salvo", assenze: 0 },
@@ -156,27 +119,27 @@
         ]
     };
 
-    const giocatoriMinimi = 6; // Numero minimo di giocatori per squadra per non subire penalità
+    const giocatoriMinimi = 6;
 
     function generaPunteggioPartita() {
-        return Math.floor(Math.random() * 21) + 25; // Punteggio tra 25 e 45
+        return Math.floor(Math.random() * 21) + 25;
     }
 
     function riduciGiocatori(squadra) {
-        const giocatoriAssenti = Math.floor(Math.random() * 3); // Massimo 2 giocatori assenti
+        const giocatoriAssenti = Math.floor(Math.random() * 3);
         squadra.giocatoriDisponibili -= giocatoriAssenti;
         for (let i = 0; i < giocatoriAssenti; i++) {
             const indiceGiocatore = Math.floor(Math.random() * squadra.giocatori.length);
-            squadra.giocatori[indiceGiocatore].assenze += 1; // Incrementa il conteggio delle assenze
+            squadra.giocatori[indiceGiocatore].assenze += 1;
         }
     }
 
     function simulaStatisticheGiocatori(squadra) {
         return squadra.giocatori.map(giocatore => ({
             nome: giocatore.nome,
-            attacchi: Math.floor(Math.random() * 21), // Numero casuale di attacchi tra 0 e 20
-            voto: (Math.random() * 4 + 6).toFixed(1), // Voto tra 6 e 10
-            assenze: giocatore.assenze // Aggiungi il numero di assenze
+            attacchi: Math.floor(Math.random() * 21),
+            voto: (Math.random() * 4 + 6).toFixed(1),
+            assenze: giocatore.assenze
         }));
     }
 
@@ -189,23 +152,13 @@
         
         statisticheA.forEach(giocatore => {
             const row = document.createElement("tr");
-            row.innerHTML = 
-                <td>${giocatore.nome}</td>
-                <td>${giocatore.attacchi}</td>
-                <td>${giocatore.voto}</td>
-                <td>${giocatore.assenze}</td>
-            ;
+            row.innerHTML = `<td>${giocatore.nome}</td><td>${giocatore.attacchi}</td><td>${giocatore.voto}</td><td>${giocatore.assenze}</td>`;
             dettagliGiocatoriA.appendChild(row);
         });
 
         statisticheB.forEach(giocatore => {
             const row = document.createElement("tr");
-            row.innerHTML = 
-                <td>${giocatore.nome}</td>
-                <td>${giocatore.attacchi}</td>
-                <td>${giocatore.voto}</td>
-                <td>${giocatore.assenze}</td>
-            ;
+            row.innerHTML = `<td>${giocatore.nome}</td><td>${giocatore.attacchi}</td><td>${giocatore.voto}</td><td>${giocatore.assenze}</td>`;
             dettagliGiocatoriB.appendChild(row);
         });
     }
@@ -214,47 +167,39 @@
         riduciGiocatori(squadraA);
         riduciGiocatori(squadraB);
 
-        // Genera punteggio delle due squadre
+        const dataPartita = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+        const dataFormattata = dataPartita.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        document.getElementById("dataPartita").textContent = `Data della partita: ${dataFormattata}`;
+
         let punteggioPartitaA = generaPunteggioPartita();
         let punteggioPartitaB = generaPunteggioPartita();
 
-        // Applica penalità se ci sono giocatori assenti
         const applicaPenalita = document.getElementById("applicaPenalita").checked;
         if (applicaPenalita) {
-            if (squadraA.giocatoriDisponibili < giocatoriMinimi) {
-                punteggioPartitaA -= 7; // Penalità di 7 punti
-            }
-            if (squadraB.giocatoriDisponibili < giocatoriMinimi) {
-                punteggioPartitaB -= 7; // Penalità di 7 punti
-            }
+            if (squadraA.giocatoriDisponibili < giocatoriMinimi) punteggioPartitaA -= 7;
+            if (squadraB.giocatoriDisponibili < giocatoriMinimi) punteggioPartitaB -= 7;
         }
 
-        // Aggiorna i punteggi totali
         squadraA.puntiTotali += punteggioPartitaA;
         squadraB.puntiTotali += punteggioPartitaB;
 
-        // Aggiorna la tabella dei risultati
+        localStorage.setItem('puntiTotaliA', squadraA.puntiTotali);
+        localStorage.setItem('puntiTotaliB', squadraB.puntiTotali);
+
         document.getElementById("puntiPartitaA").textContent = punteggioPartitaA;
-        document.getElementById("puntiTotaliA").textContent = squadraA.puntiTotali;
         document.getElementById("puntiPartitaB").textContent = punteggioPartitaB;
+        document.getElementById("puntiTotaliA").textContent = squadraA.puntiTotali;
         document.getElementById("puntiTotaliB").textContent = squadraB.puntiTotali;
 
-        // Determina il risultato della partita
-        let risultato;
-        if (punteggioPartitaA > punteggioPartitaB) {
-            risultato = <h2>${squadraA.nome} vince questa partita!</h2>;
-        } else if (punteggioPartitaB > punteggioPartitaA) {
-            risultato = <h2>${squadraB.nome} vince questa partita!</h2>;
-        } else {
-            risultato = <h2>Pareggio!</h2>;
-        }
-        document.getElementById("risultato").innerHTML = risultato;
+        const vincitore = punteggioPartitaA > punteggioPartitaB ? squadraA.nome : squadraB.nome;
+        document.getElementById("risultato").textContent = `Risultato partita: ${squadraA.nome} ${punteggioPartitaA} - ${punteggioPartitaB} ${squadraB.nome} | Vincitore: ${vincitore}`;
 
-        // Simula e mostra le statistiche dei giocatori
-        const statisticheGiocatoriA = simulaStatisticheGiocatori(squadraA);
-        const statisticheGiocatoriB = simulaStatisticheGiocatori(squadraB);
-        mostraStatisticheGiocatori(statisticheGiocatoriA, statisticheGiocatoriB);
+        const statisticheA = simulaStatisticheGiocatori(squadraA);
+        const statisticheB = simulaStatisticheGiocatori(squadraB);
+
+        mostraStatisticheGiocatori(statisticheA, statisticheB);
     }
 </script>
+
 </body>
 </html>
